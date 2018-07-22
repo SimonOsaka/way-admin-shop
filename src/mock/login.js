@@ -23,12 +23,12 @@ const resultModel = {
 }
 
 export default {
-  login: config => {
+  loginByUsername: config => {
     const { username } = JSON.parse(config.body)
     resultModel['data'] = userMap[username]
     return resultModel
   },
-  getInfo: config => {
+  getUserInfo: config => {
     const { token } = param2Obj(config.url)
     if (userMap[token]) {
       resultModel['data'] = userMap[token]
