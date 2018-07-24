@@ -60,14 +60,23 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
-    i18n: '国际化'
+    i18n: '国际化',
+    shop: '商家管理',
+    'shop-list': '商家列表',
+    'shop-create': '商家创建',
+    'shop-update': '商家编辑',
+    commodity: '商品管理',
+    'commodity-list': '商品列表',
+    'commodity-create': '商品创建',
+    'commodity-update': '商品编辑'
   },
   navbar: {
     logOut: '退出登录',
     dashboard: '首页',
     github: '项目地址',
     screenfull: '全屏',
-    theme: '换肤'
+    theme: '换肤',
+    shopInfo: '商户信息'
   },
   login: {
     title: '系统登录',
@@ -87,17 +96,22 @@ export default {
     switchRoles: '切换权限'
   },
   guide: {
-    description: '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
+    description:
+      '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
     button: '打开引导'
   },
   components: {
     documentation: '文档',
-    tinymceTips: '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',
-    dropzoneTips: '由于我司业务有特殊需求，而且要传七牛 所以没用第三方，选择了自己封装。代码非常的简单，具体代码你可以在这里看到 @/components/Dropzone',
+    tinymceTips:
+      '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',
+    dropzoneTips:
+      '由于我司业务有特殊需求，而且要传七牛 所以没用第三方，选择了自己封装。代码非常的简单，具体代码你可以在这里看到 @/components/Dropzone',
     stickyTips: '当页面滚动到预设的位置会吸附在顶部',
     backToTopTips1: '页面滚动到指定位置会在右下角出现返回顶部按钮',
-    backToTopTips2: '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',
-    imageUploadTips: '由于我在使用时它只有vue@1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。'
+    backToTopTips2:
+      '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',
+    imageUploadTips:
+      '由于我在使用时它只有vue@1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。'
   },
   table: {
     dynamicTips1: '固定表头, 按照表头顺序排序',
@@ -127,7 +141,8 @@ export default {
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
-    description: '现在的管理后台基本都是spa的形式了，它增强了用户体验，但同时也会增加页面出问题的可能性，可能一个小小的疏忽就导致整个页面的死锁。好在 Vue 官网提供了一个方法来捕获处理异常，你可以在其中进行错误处理或者异常上报。',
+    description:
+      '现在的管理后台基本都是spa的形式了，它增强了用户体验，但同时也会增加页面出问题的可能性，可能一个小小的疏忽就导致整个页面的死锁。好在 Vue 官网提供了一个方法来捕获处理异常，你可以在其中进行错误处理或者异常上报。',
     documentation: '文档介绍'
   },
   excel: {
@@ -142,11 +157,22 @@ export default {
   theme: {
     change: '换肤',
     documentation: '换肤文档',
-    tips: 'Tips: 它区别于 navbar 上的 theme-pick, 是两种不同的换肤方法，各自有不同的应用场景，具体请参考文档。'
+    tips:
+      'Tips: 它区别于 navbar 上的 theme-pick, 是两种不同的换肤方法，各自有不同的应用场景，具体请参考文档。'
   },
   tagsView: {
     close: '关闭',
     closeOthers: '关闭其它',
     closeAll: '关闭所有'
+  },
+  shop: {
+    shopNamePlaceholder: '商家名称',
+    search: '查询',
+    create: '创建'
+  },
+  commodity: {
+    search: '查询',
+    create: '创建',
+    save: '保存'
   }
 }

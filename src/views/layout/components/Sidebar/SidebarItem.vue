@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
+  <div v-if="!item.hidden&&item.children&&!hasAllHiddenChild(item.children)" class="menu-wrapper">
 
       <router-link v-if="hasOneShowingChild(item.children) && !onlyOneChild.children&&!item.alwaysShow" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
@@ -70,6 +70,17 @@ export default {
         return true
       }
       return false
+    },
+    hasAllHiddenChild(children) {
+      const showingChildren = children.filter(item => {
+        if (!item.hidden) {
+          return true
+        }
+      })
+      if (showingChildren.length === 1) {
+        return false
+      }
+      return true
     },
     resolvePath(...paths) {
       return path.resolve(this.basePath, ...paths)

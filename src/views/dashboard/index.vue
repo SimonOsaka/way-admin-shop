@@ -13,8 +13,17 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'roles'
+      'roles',
+      'shop'
     ])
+  },
+  methods: {
+    handleShopUpdate() {
+      const shopId = this.$store.getters.shop.id
+      this.$router.push({ path: '/shop/update', query: {
+        id: shopId
+      }})
+    }
   }
 }
 </script>

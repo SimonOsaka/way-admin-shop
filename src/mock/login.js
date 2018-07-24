@@ -5,15 +5,26 @@ const userMap = {
     roles: ['admin'],
     token: 'admin',
     introduction: '我是超级管理员',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar:
+      'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
   editor: {
     roles: ['editor'],
     token: 'editor',
     introduction: '我是编辑',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar:
+      'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal Editor'
+  },
+  shop: {
+    roles: ['shop'],
+    token: 'shop',
+    introduction: '我是商家',
+    avatar:
+      'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Shop Admin',
+    shop: { id: 1 }
   }
 }
 

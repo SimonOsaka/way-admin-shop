@@ -1,6 +1,8 @@
 import Mock from 'mockjs'
 import loginAPI from './login'
-// import articleAPI from './article'
+import shopAPI from './shop'
+import commodityAPI from './commodity'
+import amapAPI from './amap'
 // import remoteSearchAPI from './remoteSearch'
 // import transactionAPI from './transaction'
 
@@ -13,8 +15,24 @@ Mock.mock(/\/user\/login/, 'post', loginAPI.loginByUsername)
 Mock.mock(/\/user\/logout/, 'post', loginAPI.logout)
 Mock.mock(/\/user\/info\.*/, 'get', loginAPI.getUserInfo)
 
-// 文章相关
-// Mock.mock(/\/article\/list/, 'get', articleAPI.getList)
+// 商家管理相关
+Mock.mock(/\/admin\/shop\/list/, 'post', shopAPI.queryShopList)
+Mock.mock(/\/admin\/shop\/create/, 'post', shopAPI.createShop)
+Mock.mock(/\/admin\/shop\/update/, 'post', shopAPI.updateShop)
+Mock.mock(/\/admin\/shop\/delete/, 'post', shopAPI.deleteShop)
+Mock.mock(/\/admin\/shop\/get/, 'post', shopAPI.getShop)
+Mock.mock(/\/admin\/shop\/cate\/root/, 'post', shopAPI.getShopCateRoot)
+Mock.mock(/\/admin\/shop\/cate\/leaf/, 'post', shopAPI.getShopCateLeaf)
+
+// 商品管理相关
+Mock.mock(/\/admin\/commodity\/list/, 'post', commodityAPI.queryCommodity)
+Mock.mock(/\/admin\/commodity\/create/, 'post', commodityAPI.createCommodity)
+Mock.mock(/\/admin\/commodity\/update/, 'post', commodityAPI.updateCommodity)
+Mock.mock(/\/admin\/commodity\/delete/, 'post', commodityAPI.deleteCommodity)
+Mock.mock(/\/admin\/commodity\/get/, 'post', commodityAPI.getCommodity)
+
+// 地图相关
+Mock.mock(/\/amap\/search/, 'post', amapAPI.searchMap)
 // Mock.mock(/\/article\/detail/, 'get', articleAPI.getArticle)
 // Mock.mock(/\/article\/pv/, 'get', articleAPI.getPv)
 // Mock.mock(/\/article\/create/, 'post', articleAPI.createArticle)

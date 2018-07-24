@@ -7,8 +7,8 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /** note: submenu only apppear when children.length>=1
-*   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
-**/
+ *   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ **/
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -25,42 +25,68 @@ import Layout from '@/views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/authredirect', component: () => import('@/views/login/authredirect'), hidden: true },
-  { path: '/404', component: () => import('@/views/errorPage/404'), hidden: true },
-  { path: '/401', component: () => import('@/views/errorPage/401'), hidden: true },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/authredirect',
+    component: () => import('@/views/login/authredirect'),
+    hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/errorPage/401'),
+    hidden: true
+  },
   {
     path: '',
     component: Layout,
     redirect: 'dashboard',
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      name: 'dashboard',
-      meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      }
+    ]
   },
   {
     path: '/documentation',
     component: Layout,
     redirect: '/documentation/index',
-    children: [{
-      path: 'index',
-      component: () => import('@/views/documentation/index'),
-      name: 'documentation',
-      meta: { title: 'documentation', icon: 'documentation', noCache: true }
-    }]
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/documentation/index'),
+        name: 'documentation',
+        meta: {
+          title: 'documentation',
+          icon: 'documentation',
+          noCache: true
+        }
+      }
+    ]
   },
   {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
-    children: [{
-      path: 'index',
-      component: () => import('@/views/guide/index'),
-      name: 'guide',
-      meta: { title: 'guide', icon: 'guide', noCache: true }
-    }]
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/guide/index'),
+        name: 'guide',
+        meta: { title: 'guide', icon: 'guide', noCache: true }
+      }
+    ]
   }
 ]
 
@@ -81,23 +107,111 @@ export const asyncRouterMap = [
       icon: 'lock',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
-    children: [{
-      path: 'page',
-      component: () => import('@/views/permission/page'),
-      name: 'pagePermission',
-      meta: {
-        title: 'pagePermission',
-        roles: ['admin'] // or you can only set roles in sub nav
+    children: [
+      {
+        path: 'page',
+        component: () => import('@/views/permission/page'),
+        name: 'pagePermission',
+        meta: {
+          title: 'pagePermission',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'directive',
+        component: () => import('@/views/permission/directive'),
+        name: 'directivePermission',
+        meta: {
+          title: 'directivePermission'
+          // if do not set roles, means: this page does not require permission
+        }
       }
-    }, {
-      path: 'directive',
-      component: () => import('@/views/permission/directive'),
-      name: 'directivePermission',
-      meta: {
-        title: 'directivePermission'
-        // if do not set roles, means: this page does not require permission
+    ]
+  },
+
+  {
+    path: '/shop',
+    component: Layout,
+    redirect: '/shop/index',
+    alwaysShow: true,
+    name: 'shop',
+    meta: {
+      title: 'shop',
+      icon: 'shop',
+      roles: ['editor', 'shop']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/shop/index'),
+        name: 'shop-list',
+        meta: {
+          title: 'shop-list',
+          icon: 'list',
+          noCache: true,
+          roles: ['editor']
+        }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/shop/create'),
+        hidden: true,
+        name: 'shop-create',
+        meta: {
+          title: 'shop-create',
+          icon: 'form',
+          noCache: true,
+          roles: ['editor', 'shop']
+        }
+      },
+      {
+        path: 'update',
+        component: () => import('@/views/shop/create'),
+        hidden: true,
+        name: 'shop-update',
+        meta: {
+          title: 'shop-update',
+          icon: 'form',
+          noCache: true,
+          roles: ['editor', 'shop']
+        }
       }
-    }]
+    ]
+  },
+
+  {
+    path: '/commodity',
+    component: Layout,
+    redirect: '/commodity/index',
+    alwaysShow: true,
+    name: 'commodity',
+    meta: {
+      title: 'commodity',
+      icon: 'commodity',
+      roles: ['shop']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/commodity/index'),
+        name: 'commodity-list',
+        meta: { title: 'commodity-list', icon: 'list', noCache: true }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/commodity/create'),
+        hidden: true,
+        name: 'commodity-create',
+        meta: { title: 'commodity-create', icon: 'form', noCache: true }
+      },
+      {
+        path: 'update',
+        component: () => import('@/views/commodity/create'),
+        hidden: true,
+        name: 'commodity-update',
+        meta: { title: 'commodity-update', icon: 'form', noCache: true }
+      }
+    ]
   },
 
   { path: '*', redirect: '/404', hidden: true }
