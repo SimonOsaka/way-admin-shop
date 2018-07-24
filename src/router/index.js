@@ -153,18 +153,6 @@ export const asyncRouterMap = [
         }
       },
       {
-        path: 'create',
-        component: () => import('@/views/shop/create'),
-        hidden: true,
-        name: 'shop-create',
-        meta: {
-          title: 'shop-create',
-          icon: 'form',
-          noCache: true,
-          roles: ['editor', 'shop']
-        }
-      },
-      {
         path: 'update',
         component: () => import('@/views/shop/create'),
         hidden: true,
@@ -177,6 +165,19 @@ export const asyncRouterMap = [
         }
       }
     ]
+  },
+
+  {
+    path: '/shop/create',
+    component: () => import('@/views/shop/create'),
+    hidden: true,
+    name: 'shop-create',
+    meta: {
+      title: 'shop-create',
+      icon: 'form',
+      noCache: true,
+      roles: ['editor', 'shop']
+    }
   },
 
   {

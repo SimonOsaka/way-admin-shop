@@ -23,8 +23,8 @@ const userMap = {
     introduction: '我是商家',
     avatar:
       'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Shop Admin',
-    shop: { id: 1 }
+    name: 'Shop Admin'/* ,
+    shop: { id: 1 } */
   }
 }
 

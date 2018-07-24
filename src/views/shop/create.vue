@@ -235,13 +235,13 @@ export default {
       if (!this.form.id) {
         createShop(this.form).then(response => {
           this.$message('创建成功')
-          this.$router.push('/shop')
+          this.$router.push('/')
         })
       } else {
         updateShop(this.form).then(response => {
           this.$message('更新成功')
           if (!this.$route.query.from) {
-            this.$router.push('/shop')
+            this.$router.push('/')
           }
         })
       }
