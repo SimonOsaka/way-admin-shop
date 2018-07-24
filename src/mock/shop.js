@@ -9,6 +9,8 @@ const shopItem = {
     'https://fuss10.elemecdn.com/0/f0/71ef3220ff962d16d559767ac5b20jpeg.jpeg?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/',
   shopName: '德克士（土桥店）',
   shopAddress: '北京市通州区砖厂南里39号楼1层111室',
+  shopLng: 116.433224,
+  shopLat: 39.482613,
   shopTel: '18001223932',
   shopBusinessTime: '00:00-24:00',
   shopBusinessTime1: '00:00-3:00',

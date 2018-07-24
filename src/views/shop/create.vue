@@ -118,6 +118,8 @@ export default {
         id: undefined,
         shopName: '',
         shopAddress: '',
+        shopLng: '',
+        shopLat: '',
         shopTel: '',
         shopBusinessTime1: '',
         shopBusinessTime2: '',
@@ -218,7 +220,8 @@ export default {
             this.shopBt2.start = this.form.shopBusinessTime2.split('-')[0]
             this.shopBt2.end = this.form.shopBusinessTime2.split('-')[1]
           }
-
+          this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
+          this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
           this.getCateRootLeaf()
         })
       } else {
@@ -277,6 +280,8 @@ export default {
       const currentRow = val
       console.log(currentRow)
       this.form.shopAddress = currentRow.address
+      this.form.shopLng = currentRow.lng
+      this.form.shopLat = currentRow.lat
       this.addressMarker.position = [currentRow.lng, currentRow.lat]
       this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
     },
