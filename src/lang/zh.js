@@ -79,7 +79,7 @@ export default {
     shopInfo: '商户信息'
   },
   login: {
-    title: '系统登录',
+    title: '商家平台登录',
     logIn: '登录',
     username: '账号',
     password: '密码',

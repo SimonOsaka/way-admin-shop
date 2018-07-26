@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryShopList(params) {
   return request({
-    url: '/admin/shop/list',
+    url: '/sp/shop/list',
     method: 'post',
     data: params
   })
@@ -10,7 +10,7 @@ export function queryShopList(params) {
 
 export function createShop(params) {
   return request({
-    url: '/admin/shop/create',
+    url: '/sp/shop/create',
     method: 'post',
     data: params
   })
@@ -18,7 +18,7 @@ export function createShop(params) {
 
 export function updateShop(params) {
   return request({
-    url: '/admin/shop/update',
+    url: '/sp/shop/update',
     method: 'post',
     data: params
   })
@@ -26,7 +26,7 @@ export function updateShop(params) {
 
 export function deleteShop(params) {
   return request({
-    url: '/admin/shop/delete',
+    url: '/sp/shop/delete',
     method: 'post',
     data: params
   })
@@ -34,7 +34,7 @@ export function deleteShop(params) {
 
 export function getShop(params) {
   return request({
-    url: '/admin/shop/get',
+    url: '/sp/shop/get',
     method: 'post',
     data: params
   })
@@ -42,7 +42,7 @@ export function getShop(params) {
 
 export function getShopCateRoot(params) {
   return request({
-    url: '/admin/shop/cate/root',
+    url: '/sp/shop/cate/root',
     method: 'post',
     data: params
   })
@@ -50,7 +50,7 @@ export function getShopCateRoot(params) {
 
 export function getShopCateLeaf(params) {
   return request({
-    url: '/admin/shop/cate/leaf',
+    url: '/sp/shop/cate/leaf',
     method: 'post',
     data: params
   })

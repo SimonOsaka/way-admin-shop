@@ -1,10 +1,10 @@
 import Vue from 'vue'
 
-import AMap from 'vue-amap' // 高德地图
+import AMap from 'vue-amap' // 高德地图 https://elemefe.github.io/vue-amap/#/
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-import Element from 'element-ui'
+import Element from 'element-ui' // http://element-cn.eleme.io/#/zh-CN
 import 'element-ui/lib/theme-chalk/index.css'
 
 import '@/styles/index.scss' // global css
@@ -29,16 +29,7 @@ Vue.use(Element, {
 Vue.use(AMap)
 AMap.initAMapApiLoader({
   key: 'e318d250a2b4d53d864f7d712cc069da',
-  plugin: [
-    'AMap.Autocomplete',
-    'AMap.PlaceSearch',
-    'AMap.Scale',
-    'AMap.OverView',
-    'AMap.ToolBar',
-    'AMap.MapType',
-    'AMap.PolyEditor',
-    'AMap.CircleEditor'
-  ],
+  plugin: [],
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4'
 })

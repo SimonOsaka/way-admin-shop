@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryCommodity(params) {
   return request({
-    url: '/admin/commodity/list',
+    url: '/sp/commodity/list',
     method: 'post',
     data: params
   })
@@ -10,7 +10,7 @@ export function queryCommodity(params) {
 
 export function createCommodity(params) {
   return request({
-    url: '/admin/commodity/create',
+    url: '/sp/commodity/create',
     method: 'post',
     data: params
   })
@@ -18,7 +18,7 @@ export function createCommodity(params) {
 
 export function updateCommodity(params) {
   return request({
-    url: '/admin/commodity/update',
+    url: '/sp/commodity/update',
     method: 'post',
     data: params
   })
@@ -26,7 +26,7 @@ export function updateCommodity(params) {
 
 export function deleteCommodity(params) {
   return request({
-    url: '/admin/commodity/delete',
+    url: '/sp/commodity/delete',
     method: 'post',
     data: params
   })
@@ -34,7 +34,7 @@ export function deleteCommodity(params) {
 
 export function getCommodity(params) {
   return request({
-    url: '/admin/commodity/get',
+    url: '/sp/commodity/get',
     method: 'post',
     data: params
   })
