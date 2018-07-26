@@ -1,12 +1,10 @@
 # 商家后台
 
-> 管理商家、商品信息
-
+> 商家入住、商家管理商品信息
 
 ## Build Setup
 
-``` bash
-
+```bash
 # Clone project
 git clone https://gitlab.com/superxzl/way-admin-shop.git
 
@@ -21,4 +19,7 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# mock数据模式，所有配置过mock的url都被mock
+npm run mock
 ```
