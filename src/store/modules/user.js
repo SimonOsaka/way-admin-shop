@@ -1,9 +1,10 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getUserLoginId } from '@/utils/auth'
 
 const user = {
   state: {
     user: '',
+    userLoginId: getUserLoginId(),
     status: '',
     code: '',
     token: getToken(),
@@ -18,6 +19,9 @@ const user = {
   },
 
   mutations: {
+    SET_USER_LOGIN_ID: (state, userLoginId) => {
+      state.userLoginId = userLoginId
+    },
     SET_CODE: (state, code) => {
       state.code = code
     },
@@ -57,7 +61,8 @@ const user = {
             console.log(response)
             const data = response.data
             commit('SET_TOKEN', data.token)
-            setToken(response.data.token)
+            commit('SET_USER_LOGIN_ID', data.userLoginId)
+            setToken(response.data.token, data.userLoginId)
             resolve()
           })
           .catch(error => {
@@ -69,7 +74,8 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token)
+        const userLoginId = state.userLoginId
+        getUserInfo(state.token, userLoginId)
           .then(response => {
             if (!response.data) {
               // 由于mockjs 不支持自定义状态码只能这样hack
@@ -77,16 +83,16 @@ const user = {
             }
             const data = response.data
 
-            if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
-            } else {
-              reject('getInfo: roles must be a non-null array !')
-            }
+            // if (data.roles && data.roles.length > 0) {
+            //   // 验证返回的roles是否是一个非空数组
+            //   commit('SET_ROLES', data.roles)
+            // } else {
+            //   reject('getInfo: roles must be a non-null array !')
+            // }
 
-            commit('SET_NAME', data.name)
-            commit('SET_AVATAR', data.avatar)
-            commit('SET_INTRODUCTION', data.introduction)
+            commit('SET_NAME', data.profile.userNickName)
+            // commit('SET_AVATAR', data.avatar)
+            // commit('SET_INTRODUCTION', data.introduction)
             if (data.shop) {
               commit('SET_SHOP', data.shop)
             }

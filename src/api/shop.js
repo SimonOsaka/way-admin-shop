@@ -8,10 +8,11 @@ export function queryShopList(params) {
   })
 }
 
-export function createShop(params) {
+export function createShop(params, token) {
   return request({
     url: '/sp/shop/create',
     method: 'post',
+    headers: { token },
     data: params
   })
 }
@@ -53,5 +54,12 @@ export function getShopCateLeaf(params) {
     url: '/sp/shop/cate/leaf',
     method: 'post',
     data: params
+  })
+}
+
+export function getShopCateAll() {
+  return request({
+    url: '/sp/shop/cate/all',
+    method: 'post'
   })
 }

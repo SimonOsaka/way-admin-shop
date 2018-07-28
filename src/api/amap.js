@@ -5,7 +5,7 @@ export function searchMap(keywords) {
     keywords
   }
   return request({
-    url: '/amap/search',
+    url: '/amap/searchText',
     method: 'post',
     data
   })

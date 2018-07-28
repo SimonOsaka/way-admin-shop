@@ -3,13 +3,19 @@
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="商家logo" required>
         <el-upload
+          ref="logoUpload"
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :headers="{'Access-Control-Allow-Origin': '*'}"
+          action="https://upload.qiniup.com"
+          :data="uploadLogoData"
           :show-file-list="false"
+          :auto-upload="false"
           :on-success="handleAvatarSuccess"
+          :on-change="handleUploadOnChange"
+          :on-error="handleUploadOnError"
+          :on-progress="handleUploadOnProgress"
           :before-upload="beforeAvatarUpload">
-          <img v-if="form.shopLogoUrl" :src="form.shopLogoUrl" class="avatar">
+          <el-progress v-if="logoFile.progressShow" :width="178" type="circle" :percentage="logoFile.progress" :status="progressStatus"></el-progress>
+          <img v-else-if="form.shopLogoUrl" :src="form.shopLogoUrl + '?imageView2/1/w/178/h/178'" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
@@ -19,9 +25,10 @@
       <el-form-item label="商家分类" required>
         <el-cascader
           :options="cateRootOptions"
-          :show-all-levels="false"
           @active-item-change="handleItemChange"
           @change="handleChange"
+          @blur="handleCascaderBlur"
+          @focus="handleCascaderBlur"
           :props="cateRootProps"
           :value="cateValue"
         ></el-cascader>
@@ -35,12 +42,12 @@
             </el-amap>
           </div>
           <div class="amap-address">
-            <el-table :data="addressSearchResult" :show-header="false" highlight-current-row @current-change="handleCurrentChange" style="width: 100%; height: 300px;overflow-y: scroll;">
-              <el-table-column label="POI点信息">
+            <el-table :data="addressSearchResult" highlight-current-row :border="true" @row-click="handleCurrentChange" height="300" style="width: 100%;" :header-row-class-name="handleHeaderRowStyle">
+              <el-table-column label="选择地址">
                 <template slot-scope="scope">
-                  <span>{{scope.row['date']}}</span>
-                  <span>{{scope.row['name']}}</span>
-                  <span>{{scope.row['address']}}</span>
+                  <span class="font-weight-bold">{{scope.row['name']}}</span>
+                  <br>
+                  <span>{{scope.row['fullAddress']}}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -104,8 +111,9 @@
 </template>
 
 <script>
-import { getShop, createShop, updateShop, getShopCateRoot, getShopCateLeaf } from '@/api/shop'
+import { getShop, createShop, updateShop, getShopCateAll } from '@/api/shop'
 import { searchMap } from '@/api/amap'
+import { getQiniuToken, getShopLogoKey } from '@/utils/qiniu'
 
 export default {
   data() {
@@ -113,6 +121,7 @@ export default {
       addressMarker: {
         position: []
       },
+      uploadLogoData: {},
       addressSearchResult: [],
       form: {
         id: undefined,
@@ -127,7 +136,9 @@ export default {
         shopInfo: '',
         shopLogoUrl: '',
         shopCateRootId: undefined,
-        shopCateLeafId: undefined
+        shopCateLeafId: undefined,
+        cityCode: undefined,
+        userLoginId: undefined
       },
       shopBt1: {
         start: '',
@@ -139,13 +150,20 @@ export default {
       },
       cateRootOptions: [],
       cateRootProps: {
-        label: 'label',
+        label: 'cateName',
         value: 'id',
-        children: 'leaf'
+        children: 'leafList'
       },
       cateValue: [],
       amap: {
         zoom: 14
+      },
+      logoFile: {
+        uid: null,
+        name: null,
+        progress: 0,
+        uploadSuccess: null,
+        progressShow: false
       }
     }
   },
@@ -161,43 +179,24 @@ export default {
         return this.shopBt2.start + '-' + this.shopBt2.end
       }
       return ''
+    },
+    progressStatus() {
+      if (this.logoFile.uploadSuccess === true) {
+        return 'success'
+      } else if (this.logoFile.uploadSuccess === false) {
+        return 'exception'
+      } else {
+        return ''
+      }
     }
   },
   created() {
     this.getShopDetail()
   },
   methods: {
-    getCateRootLeaf() {
-      const rootId = this.form.shopCateRootId
-      getShopCateRoot().then(response => {
-        const data = response.data
-        this.cateRootOptions = data
-        getShopCateLeaf({ rootId: rootId }).then(response => {
-          const leaf = response.data
-          this.cateRootOptions.forEach(element => {
-            if (element.id === rootId) {
-              element.leaf = leaf
-            }
-          })
-
-          console.log('商家分类初始化数据', this.cateRootOptions)
-        })
-      })
-    },
-    getShopCateRoot() {
-      getShopCateRoot().then(response => {
-        const data = response.data
-        this.cateRootOptions = data
-      })
-    },
-    getShopCateLeaf(rootId) {
-      getShopCateLeaf({ rootId: rootId }).then(response => {
-        const leaf = response.data
-        this.cateRootOptions.forEach(element => {
-          if (element.id === rootId) {
-            element.leaf = leaf
-          }
-        })
+    getCateAll() {
+      getShopCateAll().then(response => {
+        this.cateRootOptions = response.data.cateRootBoList
       })
     },
     getShopDetail() {
@@ -205,12 +204,12 @@ export default {
       if (this.$route.query.id) {
         getShop({ id: this.$route.query.id }).then(response => {
           console.log(response)
-          this.form = response.data
-          if (this.form.shopCateRootId) {
-            this.cateValue.push(this.form.shopCateRootId)
+          this.form = response.data.shopBo
+          if (this.form.wayShopCateRoot.id) {
+            this.cateValue.push(this.form.wayShopCateRoot.id)
           }
-          if (this.form.shopCateLeafId) {
-            this.cateValue.push(this.form.shopCateLeafId)
+          if (this.form.wayShopCateLeaf.id) {
+            this.cateValue.push(this.form.wayShopCateLeaf.id)
           }
           if (this.form.shopBusinessTime1 && this.form.shopBusinessTime1.split('-').length === 2) {
             this.shopBt1.start = this.form.shopBusinessTime1.split('-')[0]
@@ -222,10 +221,10 @@ export default {
           }
           this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
           this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
-          this.getCateRootLeaf()
+          this.getCateAll()
         })
       } else {
-        this.getShopCateRoot()
+        this.getCateAll()
       }
     },
     onSubmit() {
@@ -233,7 +232,8 @@ export default {
       this.form.shopBusinessTime1 = this.t1
       this.form.shopBusinessTime2 = this.t2
       if (!this.form.id) {
-        createShop(this.form).then(response => {
+        this.form.userLoginId = this.$store.getters.userLoginId
+        createShop(this.form, this.$store.getters.token).then(response => {
           this.$message('创建成功')
           this.$router.push('/')
         })
@@ -250,9 +250,33 @@ export default {
       this.$router.go(-1)
     },
     handleAvatarSuccess(res, file) {
-      this.form.shopLogoUrl = URL.createObjectURL(file.raw)
+      console.log('上传shop logo成功返回', res)
+      this.logoFile.uploadSuccess = true
+      setTimeout(() => {
+        this.logoFile.progressShow = false
+      }, 1000)
+
+      this.form.shopLogoUrl = 'http://7xl2ey.com1.z0.glb.clouddn.com/' + res.key
+    },
+    handleUploadOnChange(file) {
+      // 文件名自定义问题解决方式
+      // https://segmentfault.com/a/1190000012234747
+      if (file.status === 'ready') {
+        this.uploadLogoData = {
+          token: getQiniuToken(),
+          key: getShopLogoKey()
+        }
+        this.logoFile.progress = 0
+        this.logoFile.uploadSuccess = null
+        this.logoFile.progressShow = true
+        this.$nextTick(() => {
+          this.$refs.logoUpload.submit()
+        })
+      }
     },
     beforeAvatarUpload(file) {
+      console.log('上传before', file)
+
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
 
@@ -262,15 +286,34 @@ export default {
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M
+      if (isJPG && isLt2M) {
+        return true
+      }
+
+      this.logoFile.progress = 0
+      this.logoFile.uploadSuccess = null
+      this.logoFile.progressShow = false
+
+      return false
     },
-    handleItemChange(val) {
-      console.log('active item:', val, 'item length:', val.length)
-      const rootId = val[val.length - 1]
-      this.getShopCateLeaf(rootId)
+    handleUploadOnError() {
+      this.logoFile.uploadSuccess = false
+      setTimeout(() => {
+        this.logoFile.progressShow = false
+      }, 1000)
+    },
+    handleUploadOnProgress(e, file) {
+      this.logoFile.progress = Math.floor(e.percent)
+    },
+    handleItemChange(value) {
+      console.log('handleItemChange', value, 'item length:', value.length)
     },
     handleChange(value) {
-      console.log(value)
+      console.log('handleChange', value)
+      // if (value.length === 1) {
+      //   const rootId = value[0]
+      //   this.getShopCateLeaf(rootId)
+      // } else
       if (value.length === 2) {
         this.form.shopCateLeafId = value[1]
         console.log('商品分类，二级选择', this.form.shopCateLeafId)
@@ -279,10 +322,11 @@ export default {
     handleCurrentChange(val) {
       const currentRow = val
       console.log(currentRow)
-      this.form.shopAddress = currentRow.address
-      this.form.shopLng = currentRow.lng
-      this.form.shopLat = currentRow.lat
-      this.addressMarker.position = [currentRow.lng, currentRow.lat]
+      this.form.shopAddress = currentRow.fullAddress
+      this.form.cityCode = currentRow.cityCode
+      this.form.shopLng = currentRow.location.split(',')[0]
+      this.form.shopLat = currentRow.location.split(',')[1]
+      this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
       this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
     },
     handleSearchAddress() {
@@ -290,6 +334,12 @@ export default {
         const data = response.data
         this.addressSearchResult = data
       })
+    },
+    handleCascaderBlur() {
+
+    },
+    handleHeaderRowStyle(row, rowIndex) {
+      return 'amap-address-header'
     }
   }
 }
@@ -324,4 +374,3 @@ export default {
   width: 80%;
 }
 </style>
-
