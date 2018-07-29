@@ -12,10 +12,12 @@ export function loginByUsername(userLoginName, userLoginPassword) {
   })
 }
 
-export function logout() {
+export function logout(token, userLoginId) {
   return request({
     url: '/sp/user/logout',
-    method: 'post'
+    method: 'post',
+    headers: { token },
+    data: { userLoginId }
   })
 }
 

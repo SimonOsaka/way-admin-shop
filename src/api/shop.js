@@ -41,6 +41,22 @@ export function getShop(params) {
   })
 }
 
+export function onlineShop(params) {
+  return request({
+    url: '/sp/shop/online',
+    method: 'post',
+    data: params
+  })
+}
+
+export function offlineShop(params) {
+  return request({
+    url: '/sp/shop/offline',
+    method: 'post',
+    data: params
+  })
+}
+
 export function getShopCateRoot(params) {
   return request({
     url: '/sp/shop/cate/root',

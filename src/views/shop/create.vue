@@ -104,16 +104,21 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">保存</el-button>
+        <el-alert :closable="false" v-if="saveBtn.disabled"
+          title="上线后，商铺信息无法修改。如需修改信息，请先执行下线操作"
+          type="error">
+        </el-alert>
       </el-form-item>
     </el-form>
+    
   </div>
 </template>
 
 <script>
 import { getShop, createShop, updateShop, getShopCateAll } from '@/api/shop'
 import { searchMap } from '@/api/amap'
-import { getQiniuToken, getShopLogoKey } from '@/utils/qiniu'
+import { getQiniuToken, getShopLogoKey, getImageFullUrl } from '@/utils/qiniu'
 
 export default {
   data() {
@@ -164,6 +169,10 @@ export default {
         progress: 0,
         uploadSuccess: null,
         progressShow: false
+      },
+      saveBtn: {
+        disabled: false,
+        loading: false
       }
     }
   },
@@ -201,8 +210,9 @@ export default {
     },
     getShopDetail() {
       console.log(this.$route.query)
-      if (this.$route.query.id) {
-        getShop({ id: this.$route.query.id }).then(response => {
+      const shopId = this.$route.query.id || this.$store.getters.shop.id
+      if (shopId) {
+        getShop({ id: shopId }).then(response => {
           console.log(response)
           this.form = response.data.shopBo
           if (this.form.wayShopCateRoot.id) {
@@ -219,6 +229,9 @@ export default {
             this.shopBt2.start = this.form.shopBusinessTime2.split('-')[0]
             this.shopBt2.end = this.form.shopBusinessTime2.split('-')[1]
           }
+          if (this.form.isDeleted === 0) {
+            this.saveBtn.disabled = true
+          }
           this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
           this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
           this.getCateAll()
@@ -231,18 +244,25 @@ export default {
       console.log(this.shopBt1, this.shopBt2, this.t1, this.t2, this.cateValue)
       this.form.shopBusinessTime1 = this.t1
       this.form.shopBusinessTime2 = this.t2
+      this.saveBtn.loading = true
       if (!this.form.id) {
         this.form.userLoginId = this.$store.getters.userLoginId
         createShop(this.form, this.$store.getters.token).then(response => {
           this.$message('创建成功')
-          this.$router.push('/')
+          window.location.href = '/'
+          this.saveBtn.loading = false
+        }).catch(() => {
+          this.saveBtn.loading = false
         })
       } else {
         updateShop(this.form).then(response => {
           this.$message('更新成功')
-          if (!this.$route.query.from) {
-            this.$router.push('/')
-          }
+          // if (!this.$route.query.from) {
+          this.$router.push('/')
+          // }
+          this.saveBtn.loading = false
+        }).catch(() => {
+          this.saveBtn.loading = false
         })
       }
     },
@@ -256,7 +276,7 @@ export default {
         this.logoFile.progressShow = false
       }, 1000)
 
-      this.form.shopLogoUrl = 'http://7xl2ey.com1.z0.glb.clouddn.com/' + res.key
+      this.form.shopLogoUrl = getImageFullUrl(res.key)
     },
     handleUploadOnChange(file) {
       // 文件名自定义问题解决方式

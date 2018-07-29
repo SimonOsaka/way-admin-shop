@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <div class="filter-container">
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('commodity.create')}}</el-button>
+      <el-button v-if="list.length === 0" class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('commodity.create')}}</el-button>
     </div>
 
     <el-table :data="list" v-loading="listLoading" border fit highlight-current-row style="width: 100%">
@@ -21,10 +21,6 @@
       </el-table-column>
     </el-table>
 
-    <div class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[10,20,30,50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
   </div>
 </template>
 
@@ -39,10 +35,10 @@ export default {
   },
   data() {
     return {
-      list: null,
-      total: null,
+      list: [],
       listLoading: false,
       listQuery: {
+        shopId: '',
         page: 1,
         size: 20
       },
@@ -52,9 +48,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      this.listQuery.shopId = this.$store.getters.shop.id
       queryCommodity(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        this.list = response.data.commodityBoList
 
         this.listLoading = false
       })
@@ -75,11 +71,21 @@ export default {
       this.$router.push({ path: '/commodity/create' })
     },
     handleUpdate(row) {
+      if (this.$store.getters.shop.isDeleted === 0) {
+        this.$message({ type: 'info', message: '商铺是上线状态，无法进行编辑' })
+        return
+      }
+
       this.$router.push({ path: '/commodity/update', query: {
         id: row['id']
       }})
     },
     handleDelete(row) {
+      if (this.$store.getters.shop.isDeleted === 0) {
+        this.$message({ type: 'info', message: '商铺是上线状态，无法进行删除' })
+        return
+      }
+
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

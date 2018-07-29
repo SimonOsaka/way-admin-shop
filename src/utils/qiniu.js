@@ -4,6 +4,10 @@ const secretKey = 'vjhOhjk3Igl0KrH-1fiHFpTC9M5tWfbYzBR2N7NE'
 const bucket = 'image02'
 const moment = require('moment')
 
+export function getImageFullUrl(key) {
+  return 'http://7xl2ey.com1.z0.glb.clouddn.com/' + key
+}
+
 export function getQiniuToken() {
   const mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
 
@@ -17,5 +21,17 @@ export function getQiniuToken() {
 }
 
 export function getShopLogoKey() {
-  return 'shop/logo/' + moment().format('YYYYMM') + '/' + moment().unix() + '.jpg'
+  return (
+    'shop/logo/' + moment().format('YYYYMM') + '/' + moment().unix() + '.jpg'
+  )
+}
+
+export function getCommodityImagesKey() {
+  return (
+    'commodity/images/' +
+    moment().format('YYYYMM') +
+    '/' +
+    moment().unix() +
+    '.jpg'
+  )
 }

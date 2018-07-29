@@ -31,11 +31,6 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/authredirect',
-    component: () => import('@/views/login/authredirect'),
-    hidden: true
-  },
-  {
     path: '/404',
     component: () => import('@/views/errorPage/404'),
     hidden: true
@@ -44,7 +39,44 @@ export const constantRouterMap = [
     path: '/401',
     component: () => import('@/views/errorPage/401'),
     hidden: true
+  }
+]
+
+export default new Router({
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouterMap
+})
+
+export const asyncNoShopRouterMap = [
+  {
+    path: '/shop',
+    component: Layout,
+    redirect: '/shop/create',
+    alwaysShow: true,
+    name: 'shop',
+    meta: {
+      title: 'shop',
+      icon: 'shop'
+    },
+    children: [
+      {
+        path: '/shop/create',
+        component: () => import('@/views/shop/create'),
+        name: 'shop-create',
+        meta: {
+          title: 'shop-create',
+          icon: 'form',
+          noCache: true
+        }
+      }
+    ]
   },
+
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+export const asyncRouterMap = [
   {
     path: '',
     component: Layout,
@@ -59,77 +91,6 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/documentation',
-    component: Layout,
-    redirect: '/documentation/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'documentation',
-        meta: {
-          title: 'documentation',
-          icon: 'documentation',
-          noCache: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true }
-      }
-    ]
-  }
-]
-
-export default new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
-})
-
-export const asyncRouterMap = [
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/index',
-    alwaysShow: true, // will always show the root menu
-    meta: {
-      title: 'permission',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'pagePermission',
-        meta: {
-          title: 'pagePermission',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'directivePermission',
-        meta: {
-          title: 'directivePermission'
-          // if do not set roles, means: this page does not require permission
-        }
-      }
-    ]
-  },
-
-  {
     path: '/shop',
     component: Layout,
     redirect: '/shop/index',
@@ -137,47 +98,30 @@ export const asyncRouterMap = [
     name: 'shop',
     meta: {
       title: 'shop',
-      icon: 'shop',
-      roles: ['editor', 'shop']
+      icon: 'shop'
     },
     children: [
-      {
-        path: 'index',
-        component: () => import('@/views/shop/index'),
-        name: 'shop-list',
-        meta: {
-          title: 'shop-list',
-          icon: 'list',
-          noCache: true,
-          roles: ['editor']
-        }
-      },
+      // {
+      //   path: 'index',
+      //   component: () => import('@/views/shop/index'),
+      //   name: 'shop-list',
+      //   meta: {
+      //     title: 'shop-list',
+      //     icon: 'list',
+      //     noCache: true
+      //   }
+      // },
       {
         path: 'update',
         component: () => import('@/views/shop/create'),
-        hidden: true,
         name: 'shop-update',
         meta: {
           title: 'shop-update',
           icon: 'form',
-          noCache: true,
-          roles: ['editor', 'shop']
+          noCache: true
         }
       }
     ]
-  },
-
-  {
-    path: '/shop/create',
-    component: () => import('@/views/shop/create'),
-    hidden: true,
-    name: 'shop-create',
-    meta: {
-      title: 'shop-create',
-      icon: 'form',
-      noCache: true,
-      roles: ['editor', 'shop']
-    }
   },
 
   {
@@ -188,8 +132,7 @@ export const asyncRouterMap = [
     name: 'commodity',
     meta: {
       title: 'commodity',
-      icon: 'commodity',
-      roles: ['shop']
+      icon: 'commodity'
     },
     children: [
       {

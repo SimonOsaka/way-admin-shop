@@ -7,28 +7,13 @@
     <div class="right-menu">
       <error-log class="errLog-container right-menu-item"></error-log>
 
-      <el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
-        <screenfull class="screenfull right-menu-item"></screenfull>
-      </el-tooltip>
-
-      <lang-select class="international right-menu-item"></lang-select>
-
-      <el-tooltip effect="dark" :content="$t('navbar.theme')" placement="bottom">
-        <theme-picker class="theme-switch right-menu-item"></theme-picker>
-      </el-tooltip>
-
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link v-if="shop.id" :to="{path: '/shop/update', query: { id: shop.id, from: 'profile'} }">
-            <el-dropdown-item>
-              {{$t('navbar.shopInfo')}}
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
+          <el-dropdown-item>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -42,18 +27,12 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import LangSelect from '@/components/LangSelect'
-import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ErrorLog,
-    Screenfull,
-    LangSelect,
-    ThemePicker
+    ErrorLog
   },
   computed: {
     ...mapGetters([

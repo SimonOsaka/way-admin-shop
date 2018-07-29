@@ -88,13 +88,13 @@ export default {
             .dispatch('LoginByUsername', this.loginForm)
             .then(() => {
               this.loading = false
-              const shopId = this.$store.getters.shop.id
-              const roles = this.$store.getters.roles
-              if (!shopId && roles.indexOf('shop')) {
-                this.$router.push({ path: '/shop/create' })
-              } else {
-                this.$router.push({ path: '/' })
-              }
+              // const shopId = this.$store.getters.shop.id
+              // const roles = this.$store.getters.roles
+              // if (!shopId /* && roles.indexOf('shop') */) {
+              //   this.$router.push({ path: '/shop/create' })
+              // } else {
+              this.$router.push({ path: '/' })
+              // }
             })
             .catch(() => {
               this.loading = false

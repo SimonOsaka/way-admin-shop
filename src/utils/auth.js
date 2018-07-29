@@ -18,5 +18,6 @@ export function setToken(token, userLoginId) {
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey) && Cookies.remove(UserLoginIdKey)
+  Cookies.remove(UserLoginIdKey)
+  return Cookies.remove(TokenKey)
 }
