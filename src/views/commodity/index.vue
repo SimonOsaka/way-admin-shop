@@ -13,8 +13,9 @@
       </el-table-column>
       <el-table-column prop="name" label="商品名称"></el-table-column>
       <el-table-column prop="price" label="商品价格" width="100"></el-table-column>
-      <el-table-column align="center" label="操作" width="180" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="270" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button type="success" size="mini" @click="handleDetail(scope.row)">查看</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -69,6 +70,11 @@ export default {
     },
     handleCreate() {
       this.$router.push({ path: '/commodity/create' })
+    },
+    handleDetail(row) {
+      this.$router.push({ path: '/commodity/detail', query: {
+        id: row['id']
+      }})
     },
     handleUpdate(row) {
       if (this.$store.getters.shop.isDeleted === 0) {

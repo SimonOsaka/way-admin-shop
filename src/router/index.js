@@ -142,6 +142,13 @@ export const asyncRouterMap = [
         meta: { title: 'commodity-list', icon: 'list', noCache: true }
       },
       {
+        path: 'detail',
+        component: () => import('@/views/commodity/detail'),
+        hidden: true,
+        name: 'commodity-detail',
+        meta: { title: 'commodity-detail', icon: 'form', noCache: true }
+      },
+      {
         path: 'create',
         component: () => import('@/views/commodity/create'),
         hidden: true,

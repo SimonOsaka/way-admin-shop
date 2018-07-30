@@ -68,7 +68,8 @@ export default {
     commodity: '商品管理',
     'commodity-list': '商品列表',
     'commodity-create': '商品创建',
-    'commodity-update': '商品编辑'
+    'commodity-update': '商品编辑',
+    'commodity-detail': '商品详情'
   },
   navbar: {
     logOut: '退出登录',
