@@ -93,7 +93,7 @@ export const asyncRouterMap = [
   {
     path: '/shop',
     component: Layout,
-    redirect: '/shop/index',
+    redirect: 'noredirect',
     alwaysShow: true,
     name: 'shop',
     meta: {

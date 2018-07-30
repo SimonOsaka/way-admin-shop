@@ -27,7 +27,7 @@
         <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="商品价格" required>
-        <el-input v-model="form.price"></el-input>
+        <el-input v-model="form.price" placeholder="最低价格0.1元"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>

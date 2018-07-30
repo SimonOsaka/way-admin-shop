@@ -215,10 +215,10 @@ export default {
         getShop({ id: shopId }).then(response => {
           console.log(response)
           this.form = response.data.shopBo
-          if (this.form.wayShopCateRoot.id) {
+          if (this.form.wayShopCateRoot && this.form.wayShopCateRoot.id) {
             this.cateValue.push(this.form.wayShopCateRoot.id)
           }
-          if (this.form.wayShopCateLeaf.id) {
+          if (this.form.wayShopCateLeaf && this.form.wayShopCateLeaf.id) {
             this.cateValue.push(this.form.wayShopCateLeaf.id)
           }
           if (this.form.shopBusinessTime1 && this.form.shopBusinessTime1.split('-').length === 2) {
@@ -258,9 +258,13 @@ export default {
         updateShop(this.form).then(response => {
           this.$message('更新成功')
           // if (!this.$route.query.from) {
-          this.$router.push('/')
+          this.$store
+            .dispatch('GetUserInfo')
+            .then(res => {
+              this.$router.push('/')
+              this.saveBtn.loading = false
+            })
           // }
-          this.saveBtn.loading = false
         }).catch(() => {
           this.saveBtn.loading = false
         })
@@ -344,6 +348,7 @@ export default {
       console.log(currentRow)
       this.form.shopAddress = currentRow.fullAddress
       this.form.cityCode = currentRow.cityCode
+      this.form.adCode = currentRow.adCode
       this.form.shopLng = currentRow.location.split(',')[0]
       this.form.shopLat = currentRow.location.split(',')[1]
       this.addressMarker.position = [this.form.shopLng, this.form.shopLat]

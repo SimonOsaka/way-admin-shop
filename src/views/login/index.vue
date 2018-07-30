@@ -93,7 +93,8 @@ export default {
               // if (!shopId /* && roles.indexOf('shop') */) {
               //   this.$router.push({ path: '/shop/create' })
               // } else {
-              this.$router.push({ path: '/' })
+              // this.$router.push({ path: '/' })
+              location.href = '/'
               // }
             })
             .catch(() => {
