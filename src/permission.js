@@ -4,6 +4,7 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
 import { Message } from 'element-ui'
 import { getToken, getUserLoginId } from '@/utils/auth' // 验权
+import i18n from './lang' // Internationalization
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -18,6 +19,9 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // 不重定向白名单
 
 router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = i18n.t('route.' + to.meta.title)
+  }
   NProgress.start() // start progress bar
   if (getToken() && getUserLoginId()) {
     // determine if there has token
