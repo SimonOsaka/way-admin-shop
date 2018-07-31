@@ -10,7 +10,6 @@
         商铺电话：{{shop.shopTel}}<br>
         商铺营业时间：{{shop.shopBusinessTime1 + ' ' + shop.shopBusinessTime2}}<br>
         商铺简介：{{shop.shopInfo}}<br>
-        商铺城市编码：{{shop.cityCode}}<br>
         <div style="float: right;">
           <el-button v-if="shop.isDeleted === 0" size="mini" type="danger" @click="offline">点击下线</el-button>
           <el-button v-else-if="shop.isDeleted === 5" size="mini" type="success" @click="online">点击上线</el-button>

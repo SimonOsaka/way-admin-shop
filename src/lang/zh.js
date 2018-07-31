@@ -82,7 +82,7 @@ export default {
   login: {
     title: '商家平台登录',
     logIn: '登录',
-    username: '账号',
+    username: '用户名，本站通用',
     password: '密码',
     any: '随便填',
     thirdparty: '第三方登录',
