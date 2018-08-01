@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="24">
-        <img :src="imgUrl" v-for="imgUrl in form.imgUrlList">
+        <img :src="imgUrl + '?imageView2/0/w/178/h178'" v-for="imgUrl in form.imgUrlList" class="image">
       </el-col>
     </el-row>
     <el-row :gutter="10">
@@ -58,6 +58,11 @@ export default {
 <style scoped>
 .line {
   text-align: center;
+}
+.image {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px dotted lightskyblue;
 }
 </style>
 
