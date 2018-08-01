@@ -69,7 +69,10 @@ export default {
     'commodity-list': '商品列表',
     'commodity-create': '商品创建',
     'commodity-update': '商品编辑',
-    'commodity-detail': '商品详情'
+    'commodity-detail': '商品详情',
+    login: '商家登录页面',
+    '404': '页面不存在',
+    '401': '禁止访问'
   },
   navbar: {
     logOut: '退出登录',
