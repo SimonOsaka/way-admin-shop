@@ -1,11 +1,15 @@
 var qiniu = require('qiniu')
 const accessKey = 'EWUYsfsn9IgUlB5jWgAUe8hF5qlHkWZfCsiinvyb'
 const secretKey = 'vjhOhjk3Igl0KrH-1fiHFpTC9M5tWfbYzBR2N7NE'
-const bucket = 'static'
+const bucket = process.env.NODE_ENV === 'production' ? 'static' : 'image02'
+const imageHost =
+  process.env.NODE_ENV === 'production'
+    ? 'http://static.duozouzou.top/'
+    : 'http://7xl2ey.com1.z0.glb.clouddn.com/'
 const moment = require('moment')
 
 export function getImageFullUrl(key) {
-  return 'http://static.duozouzou.top/' + key
+  return imageHost + key
 }
 
 export function getQiniuToken() {
