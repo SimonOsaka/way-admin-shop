@@ -2,14 +2,15 @@
   <div class="dashboard-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>商铺名称：{{shop.shopName}}</span>
-        <span style="float: right;">商铺状态：<el-tag :type="statusType(shop.isDeleted)">{{shop.shopStatusName}}</el-tag></span>
+        <span>商家名称：{{shop.shopName}}</span>
+        <span style="float: right;">商家状态：<el-tag :type="statusType(shop.isDeleted)">{{shop.shopStatusName}}</el-tag></span>
       </div>
       <div class="text item">
-        商铺地址：{{shop.shopAddress}}<br>
-        商铺电话：{{shop.shopTel}}<br>
-        商铺营业时间：{{shop.shopBusinessTime1 + ' ' + shop.shopBusinessTime2}}<br>
-        商铺简介：{{shop.shopInfo}}<br>
+        商家 ID：<strong>{{shop.id}}</strong><br>
+        商家地址：{{shop.shopAddress}}<br>
+        商家电话：{{shop.shopTel}}<br>
+        商家营业时间：{{shop.shopBusinessTime1 + ' ' + shop.shopBusinessTime2}}<br>
+        商家简介：{{shop.shopInfo}}<br>
         <div style="float: right;">
           <el-button v-if="shop.isDeleted === 0" size="mini" type="danger" @click="offline">点击下线</el-button>
           <el-button v-else-if="shop.isDeleted === 5" size="mini" type="success" @click="online">点击上线</el-button>

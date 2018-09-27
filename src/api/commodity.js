@@ -39,3 +39,19 @@ export function getCommodity(params) {
     data: params
   })
 }
+
+export function onlineCommodity(params) {
+  return request({
+    url: '/sp/commodity/online',
+    method: 'post',
+    data: params
+  })
+}
+
+export function offlineCommodity(params) {
+  return request({
+    url: '/sp/commodity/offline',
+    method: 'post',
+    data: params
+  })
+}

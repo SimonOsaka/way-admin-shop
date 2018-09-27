@@ -33,7 +33,7 @@
         <el-button @click="onCancel">取消</el-button>
         <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">{{$t('commodity.save')}}</el-button>
         <el-alert :closable="false" v-if="saveBtn.disabled"
-          title="商铺上线后，商品信息无法修改。如需修改信息，请先执行商铺下线操作"
+          title="商家上线后，商品信息无法修改。如需修改信息，请先执行商家下线操作"
           type="error">
         </el-alert>
       </el-form-item>

@@ -106,7 +106,7 @@
         <el-button @click="onCancel">取消</el-button>
         <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">保存</el-button>
         <el-alert :closable="false" v-if="saveBtn.disabled"
-          title="上线后，商铺信息无法修改。如需修改信息，请先执行下线操作"
+          title="商家信息无法编辑，只有在【草稿】和【待上线】状态允许编辑。"
           type="error">
         </el-alert>
       </el-form-item>
@@ -229,7 +229,7 @@ export default {
             this.shopBt2.start = this.form.shopBusinessTime2.split('-')[0]
             this.shopBt2.end = this.form.shopBusinessTime2.split('-')[1]
           }
-          if (this.form.isDeleted === 0) {
+          if (this.form.isDeleted !== 3 && this.form.isDeleted !== 5) {
             this.saveBtn.disabled = true
           }
           this.addressMarker.position = [this.form.shopLng, this.form.shopLat]

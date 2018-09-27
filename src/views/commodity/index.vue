@@ -11,13 +11,21 @@
           <img class="shop_logo" :src="scope.row['imgUrl']"></img>
         </template>
       </el-table-column>
+      <el-table-column prop="id" label="商品 ID"></el-table-column>
       <el-table-column prop="name" label="商品名称"></el-table-column>
       <el-table-column prop="price" label="商品价格" width="100"></el-table-column>
+      <el-table-column label="商品状态" width="80">
+        <template slot-scope="scope">
+          <el-tag>{{ scope.row.statusName }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="270" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleDetail(scope.row)">查看</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="mini" @click="handleDetail(scope.row)">查看</el-button>
+          <el-button v-if="scope.row.isDeleted === 3" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-if="scope.row.isDeleted === 5" size="mini" type="success" @click="handleOnline(scope.row)">上架</el-button>
+          <el-button v-if="scope.row.isDeleted === 0" size="mini" type="success" @click="handleOffline(scope.row)">下架</el-button>
+          <el-button v-if="scope.row.isDeleted === 3 || scope.row.isDeleted === 4 || scope.row.isDeleted === 5" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -26,7 +34,7 @@
 </template>
 
 <script>
-import { queryCommodity, deleteCommodity } from '@/api/commodity'
+import { queryCommodity, deleteCommodity, onlineCommodity, offlineCommodity } from '@/api/commodity'
 import waves from '@/directive/waves' // 水波纹指令
 
 export default {
@@ -52,7 +60,9 @@ export default {
       this.listQuery.shopId = this.$store.getters.shop.id
       queryCommodity(this.listQuery).then(response => {
         this.list = response.data.commodityBoList
-
+        this.listLoading = false
+      }, error => {
+        console.error(error)
         this.listLoading = false
       })
     },
@@ -109,6 +119,50 @@ export default {
         this.$message({
           type: 'info',
           message: '已取消删除'
+        })
+      })
+    },
+    handleOnline(row) {
+      this.$confirm('确定要执行上架？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        onlineCommodity({ id: row['id'] }).then(response => {
+          const index = this.list.indexOf(row)
+          this.list[index].isDeleted = 0
+          this.list[index].statusName = response.data.commodityBo.statusName
+          this.$message({
+            type: 'success',
+            message: '上架成功!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消上架'
+        })
+      })
+    },
+    handleOffline(row) {
+      this.$confirm('确定要执行下架？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        offlineCommodity({ id: row['id'] }).then(response => {
+          const index = this.list.indexOf(row)
+          this.list[index].isDeleted = 5
+          this.list[index].statusName = response.data.commodityBo.statusName
+          this.$message({
+            type: 'success',
+            message: '下架成功!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消下架'
         })
       })
     }
