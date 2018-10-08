@@ -55,3 +55,11 @@ export function offlineCommodity(params) {
     data: params
   })
 }
+
+export function getCommodityRejectLog(params) {
+  return request({
+    url: '/sp/commodity/log/reject/get',
+    method: 'post',
+    data: params
+  })
+}

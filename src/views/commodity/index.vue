@@ -14,27 +14,35 @@
       <el-table-column prop="id" label="商品 ID"></el-table-column>
       <el-table-column prop="name" label="商品名称"></el-table-column>
       <el-table-column prop="price" label="商品价格" width="100"></el-table-column>
-      <el-table-column label="商品状态" width="80">
+      <el-table-column align="center" label="商品状态">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.statusName }}</el-tag>
+          <div v-if="scope.row.isDeleted === 3">
+            <el-button type="text" size="mini" @click="handleReason(scope.row)">查看原因</el-button>
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="270" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleDetail(scope.row)">查看</el-button>
-          <el-button v-if="scope.row.isDeleted === 3" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.isDeleted === 5" size="mini" type="success" @click="handleOnline(scope.row)">上架</el-button>
-          <el-button v-if="scope.row.isDeleted === 0" size="mini" type="success" @click="handleOffline(scope.row)">下架</el-button>
-          <el-button v-if="scope.row.isDeleted === 3 || scope.row.isDeleted === 4 || scope.row.isDeleted === 5" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button-group>
+            <el-button size="mini" @click="handleDetail(scope.row)">查看</el-button>
+            <el-button v-if="scope.row.isDeleted === 3 || scope.row.isDeleted === 5" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+            <el-button v-if="scope.row.isDeleted === 5" size="mini" type="success" @click="handleOnline(scope.row)">上架</el-button>
+            <el-button v-if="scope.row.isDeleted === 0" size="mini" type="success" @click="handleOffline(scope.row)">下架</el-button>
+            <el-button v-if="scope.row.isDeleted === 3 || scope.row.isDeleted === 4 || scope.row.isDeleted === 5" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
 
+    <el-dialog title="原因" :visible.sync="reject.dialogVisible">
+      <span style="color: red; font-weight: bold;">{{ reject.content }}</span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { queryCommodity, deleteCommodity, onlineCommodity, offlineCommodity } from '@/api/commodity'
+import { queryCommodity, deleteCommodity, onlineCommodity, offlineCommodity, getCommodityRejectLog } from '@/api/commodity'
 import waves from '@/directive/waves' // 水波纹指令
 
 export default {
@@ -51,7 +59,11 @@ export default {
         page: 1,
         size: 20
       },
-      tableData: []
+      tableData: [],
+      reject: {
+        dialogVisible: false,
+        content: ''
+      }
     }
   },
   methods: {
@@ -164,6 +176,15 @@ export default {
           type: 'info',
           message: '已取消下架'
         })
+      })
+    },
+    handleReason(row) {
+      getCommodityRejectLog({ type: 3, commodityId: row.id }).then(response => {
+        const commodityLogBo = response.data['commodityLogBo']
+        if (commodityLogBo) {
+          this.reject.content = commodityLogBo.content
+        }
+        this.reject.dialogVisible = true
       })
     }
   },

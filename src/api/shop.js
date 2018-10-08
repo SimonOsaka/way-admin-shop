@@ -79,3 +79,11 @@ export function getShopCateAll() {
     method: 'post'
   })
 }
+
+export function getShopRejectLog(params) {
+  return request({
+    url: '/sp/shop/log/reject/get',
+    method: 'post',
+    data: params
+  })
+}

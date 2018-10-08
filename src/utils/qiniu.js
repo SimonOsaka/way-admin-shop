@@ -5,7 +5,7 @@ const bucket = process.env.NODE_ENV === 'production' ? 'static' : 'image02'
 const imageHost =
   process.env.NODE_ENV === 'production'
     ? 'http://static.duozouzou.top/'
-    : 'http://7xl2ey.com1.z0.glb.clouddn.com/'
+    : 'http://image02.duozouzou.top/'
 const moment = require('moment')
 
 export function getImageFullUrl(key) {
@@ -25,17 +25,13 @@ export function getQiniuToken() {
 }
 
 export function getShopLogoKey() {
-  return (
-    'shop/logo/' + moment().format('YYYYMM') + '/' + moment().unix() + '.jpg'
-  )
+  return getImagesKey('shop/logo/')
 }
 
 export function getCommodityImagesKey() {
-  return (
-    'commodity/images/' +
-    moment().format('YYYYMM') +
-    '/' +
-    moment().unix() +
-    '.jpg'
-  )
+  return getImagesKey('commodity/images/')
+}
+
+export function getImagesKey(prefix) {
+  return prefix + moment().format('YYYYMM') + '/' + moment().unix() + '.jpg'
 }

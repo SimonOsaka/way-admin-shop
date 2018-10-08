@@ -2,22 +2,7 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="商家logo" required>
-        <el-upload
-          ref="logoUpload"
-          class="avatar-uploader"
-          action="https://upload.qiniup.com"
-          :data="uploadLogoData"
-          :show-file-list="false"
-          :auto-upload="false"
-          :on-success="handleAvatarSuccess"
-          :on-change="handleUploadOnChange"
-          :on-error="handleUploadOnError"
-          :on-progress="handleUploadOnProgress"
-          :before-upload="beforeAvatarUpload">
-          <el-progress v-if="logoFile.progressShow" :width="178" type="circle" :percentage="logoFile.progress" :status="progressStatus"></el-progress>
-          <img v-else-if="form.shopLogoUrl" :src="form.shopLogoUrl + '?imageView2/1/w/178/h/178'" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        <upload-one :basePath="baseImagePath" :imageUrl="form.shopLogoUrl" @success="handleUploadSuccess"></upload-one>
       </el-form-item>
       <el-form-item label="商家名称" required>
         <el-input v-model="form.shopName"></el-input>
@@ -102,9 +87,55 @@
       <el-form-item label="商家简介">
         <el-input type="textarea" v-model="form.shopInfo"></el-input>
       </el-form-item>
+
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="身份证正面">
+            <upload-one :basePath="defaultQualify.idcard" :imageUrl.sync="form.idcardFrontImgUrl" @success="handleIdcardFrontUploadSuccess"></upload-one>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="身份证背面">
+            <upload-one :basePath="defaultQualify.idcard" :imageUrl="form.idcardBackImgUrl" @success="handleIdcardBackUploadSuccess"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="手持身份证">
+            <upload-one :basePath="defaultQualify.idcard" :imageUrl="form.idcardHandImgUrl" @success="handleIdcardHandUploadSuccess"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+    <el-row>
+      <el-col :span="8">
+        <el-form-item label="商家门面照片">
+          <upload-one :basePath="defaultQualify.images" :imageUrl="form.shopOutsideImgUrl" @success="handleShopOutsideUploadSuccess"/>
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item label="商家内部照片">
+          <upload-one :basePath="defaultQualify.images" :imageUrl="form.shopInsideImgUrl" @success="handleShopInsideUploadSuccess"/>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="8">
+        <el-form-item label="营业执照">
+          <upload-one :basePath="defaultQualify.license" :imageUrl="form.businessLicenseImgUrl" @success="handleBusinessLicenseUploadSuccess"/>
+        </el-form-item>
+      </el-col>
+      <el-col :span="16">
+        <el-form-item label="其它资料">
+          <upload-multiple :basePath="defaultQualify.license" :imageUrls="otherQualifyImageUrlList" @onSuccess="handleOtherLicenseUploadSuccess" @onRemove="handleOtherLicenseUploadRemove"/>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>
-        <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">保存</el-button>
+        <el-button v-if="form.id" type="primary" @click="onSave" :loading="saveBtn.loading" :disabled="saveBtn.disabled">保存</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">提交</el-button>
         <el-alert :closable="false" v-if="saveBtn.disabled"
           title="商家信息无法编辑，只有在【草稿】和【待上线】状态允许编辑。"
           type="error">
@@ -118,15 +149,16 @@
 <script>
 import { getShop, createShop, updateShop, getShopCateAll } from '@/api/shop'
 import { searchMap } from '@/api/amap'
-import { getQiniuToken, getShopLogoKey, getImageFullUrl } from '@/utils/qiniu'
+import uploadOne from '@/components/UploadImage/uploadOne'
+import uploadMultiple from '@/components/UploadImage/uploadMultiple'
 
 export default {
+  components: { uploadOne, uploadMultiple },
   data() {
     return {
       addressMarker: {
         position: []
       },
-      uploadLogoData: {},
       addressSearchResult: [],
       form: {
         id: undefined,
@@ -143,7 +175,19 @@ export default {
         shopCateRootId: undefined,
         shopCateLeafId: undefined,
         cityCode: undefined,
-        userLoginId: undefined
+        userLoginId: undefined,
+        businessLicenseImgUrl: '',
+        idcardBackImgUrl: '',
+        idcardFrontImgUrl: '',
+        idcardHandImgUrl: '',
+        other1ImgUrl: '',
+        other2ImgUrl: '',
+        other3ImgUrl: '',
+        other4ImgUrl: '',
+        other5ImgUrl: '',
+        shopInsideImgUrl: '',
+        shopOutsideImgUrl: '',
+        updateType: ''
       },
       shopBt1: {
         start: '',
@@ -163,17 +207,17 @@ export default {
       amap: {
         zoom: 14
       },
-      logoFile: {
-        uid: null,
-        name: null,
-        progress: 0,
-        uploadSuccess: null,
-        progressShow: false
-      },
       saveBtn: {
         disabled: false,
         loading: false
-      }
+      },
+      baseImagePath: 'shop/logo/',
+      defaultQualify: {
+        idcard: 'shop/idcard/',
+        license: 'shop/license/',
+        images: 'shop/images/'
+      },
+      otherQualifyImageUrlList: []
     }
   },
   computed: {
@@ -188,15 +232,6 @@ export default {
         return this.shopBt2.start + '-' + this.shopBt2.end
       }
       return ''
-    },
-    progressStatus() {
-      if (this.logoFile.uploadSuccess === true) {
-        return 'success'
-      } else if (this.logoFile.uploadSuccess === false) {
-        return 'exception'
-      } else {
-        return ''
-      }
     }
   },
   created() {
@@ -214,7 +249,8 @@ export default {
       if (shopId) {
         getShop({ id: shopId }).then(response => {
           console.log(response)
-          this.form = response.data.shopBo
+          const shopData = response.data.shopBo
+          this.form = shopData
           if (this.form.wayShopCateRoot && this.form.wayShopCateRoot.id) {
             this.cateValue.push(this.form.wayShopCateRoot.id)
           }
@@ -234,16 +270,67 @@ export default {
           }
           this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
           this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
+          this.form.idcardFrontImgUrl = shopData.wayShopQualification.idcardFrontImgUrl
+          this.form.idcardBackImgUrl = shopData.wayShopQualification.idcardBackImgUrl
+          this.form.idcardHandImgUrl = shopData.wayShopQualification.idcardHandImgUrl
+          this.form.businessLicenseImgUrl = shopData.wayShopQualification.businessLicenseImgUrl
+          this.form.shopInsideImgUrl = shopData.wayShopQualification.shopInsideImgUrl
+          this.form.shopOutsideImgUrl = shopData.wayShopQualification.shopOutsideImgUrl
+          if (shopData.wayShopQualification['other1ImgUrl']) {
+            this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other1ImgUrl'], name: 'other1' })
+          }
+          if (shopData.wayShopQualification['other2ImgUrl']) {
+            this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other2ImgUrl'], name: 'other2' })
+          }
+          if (shopData.wayShopQualification['other3ImgUrl']) {
+            this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other3ImgUrl'], name: 'other3' })
+          }
+          if (shopData.wayShopQualification['other4ImgUrl']) {
+            this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other4ImgUrl'], name: 'other4' })
+          }
+          if (shopData.wayShopQualification['other5ImgUrl']) {
+            this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other5ImgUrl'], name: 'other5' })
+          }
           this.getCateAll()
         })
       } else {
         this.getCateAll()
       }
     },
+    onSave() {
+      this.form.updateType = 'save'
+      this.onRequest()
+    },
     onSubmit() {
+      this.form.updateType = 'submit'
+      this.onRequest()
+    },
+    onRequest() {
       console.log(this.shopBt1, this.shopBt2, this.t1, this.t2, this.cateValue)
       this.form.shopBusinessTime1 = this.t1
       this.form.shopBusinessTime2 = this.t2
+      this.form.other1ImgUrl = ''
+      this.form.other2ImgUrl = ''
+      this.form.other3ImgUrl = ''
+      this.form.other4ImgUrl = ''
+      this.form.other5ImgUrl = ''
+      if (this.otherQualifyImageUrlList.length !== 0) {
+        if (this.otherQualifyImageUrlList[0]) {
+          this.form.other1ImgUrl = this.otherQualifyImageUrlList[0].url
+        }
+        if (this.otherQualifyImageUrlList[1]) {
+          this.form.other2ImgUrl = this.otherQualifyImageUrlList[1].url
+        }
+        if (this.otherQualifyImageUrlList[2]) {
+          this.form.other3ImgUrl = this.otherQualifyImageUrlList[2].url
+        }
+        if (this.otherQualifyImageUrlList[3]) {
+          this.form.other4ImgUrl = this.otherQualifyImageUrlList[3].url
+        }
+        if (this.otherQualifyImageUrlList[4]) {
+          this.form.other5ImgUrl = this.otherQualifyImageUrlList[4].url
+        }
+      }
       this.saveBtn.loading = true
       if (!this.form.id) {
         this.form.userLoginId = this.$store.getters.userLoginId
@@ -261,7 +348,9 @@ export default {
           this.$store
             .dispatch('GetUserInfo')
             .then(res => {
-              this.$router.push('/')
+              if (this.form.updateType === 'submit') {
+                this.$router.push('/')
+              }
               this.saveBtn.loading = false
             })
           // }
@@ -272,62 +361,6 @@ export default {
     },
     onCancel() {
       this.$router.go(-1)
-    },
-    handleAvatarSuccess(res, file) {
-      console.log('上传shop logo成功返回', res)
-      this.logoFile.uploadSuccess = true
-      setTimeout(() => {
-        this.logoFile.progressShow = false
-      }, 1000)
-
-      this.form.shopLogoUrl = getImageFullUrl(res.key)
-    },
-    handleUploadOnChange(file) {
-      // 文件名自定义问题解决方式
-      // https://segmentfault.com/a/1190000012234747
-      if (file.status === 'ready') {
-        this.uploadLogoData = {
-          token: getQiniuToken(),
-          key: getShopLogoKey()
-        }
-        this.logoFile.progress = 0
-        this.logoFile.uploadSuccess = null
-        this.logoFile.progressShow = true
-        this.$nextTick(() => {
-          this.$refs.logoUpload.submit()
-        })
-      }
-    },
-    beforeAvatarUpload(file) {
-      console.log('上传before', file)
-
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      if (isJPG && isLt2M) {
-        return true
-      }
-
-      this.logoFile.progress = 0
-      this.logoFile.uploadSuccess = null
-      this.logoFile.progressShow = false
-
-      return false
-    },
-    handleUploadOnError() {
-      this.logoFile.uploadSuccess = false
-      setTimeout(() => {
-        this.logoFile.progressShow = false
-      }, 1000)
-    },
-    handleUploadOnProgress(e, file) {
-      this.logoFile.progress = Math.floor(e.percent)
     },
     handleItemChange(value) {
       console.log('handleItemChange', value, 'item length:', value.length)
@@ -365,6 +398,34 @@ export default {
     },
     handleHeaderRowStyle(row, rowIndex) {
       return 'amap-address-header'
+    },
+    handleUploadSuccess(res) {
+      this.form.shopLogoUrl = res.url
+    },
+    handleIdcardFrontUploadSuccess(res) {
+      console.log('handleIdcardFrontUploadSuccess', res)
+      this.form.idcardFrontImgUrl = res.url
+    },
+    handleIdcardBackUploadSuccess(res) {
+      this.form.idcardBackImgUrl = res.url
+    },
+    handleIdcardHandUploadSuccess(res) {
+      this.form.idcardHandImgUrl = res.url
+    },
+    handleShopOutsideUploadSuccess(res) {
+      this.form.shopOutsideImgUrl = res.url
+    },
+    handleShopInsideUploadSuccess(res) {
+      this.form.shopInsideImgUrl = res.url
+    },
+    handleBusinessLicenseUploadSuccess(res) {
+      this.form.businessLicenseImgUrl = res.url
+    },
+    handleOtherLicenseUploadSuccess(res) {
+      this.otherQualifyImageUrlList.push(res.file)
+    },
+    handleOtherLicenseUploadRemove(res) {
+      this.otherQualifyImageUrlList = res.files
     }
   }
 }
