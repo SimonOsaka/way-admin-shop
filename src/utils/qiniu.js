@@ -1,3 +1,5 @@
+import store from '../store'
+
 var qiniu = require('qiniu')
 const accessKey = 'EWUYsfsn9IgUlB5jWgAUe8hF5qlHkWZfCsiinvyb'
 const secretKey = 'vjhOhjk3Igl0KrH-1fiHFpTC9M5tWfbYzBR2N7NE'
@@ -33,5 +35,14 @@ export function getCommodityImagesKey() {
 }
 
 export function getImagesKey(prefix) {
-  return prefix + moment().format('YYYYMM') + '/' + moment().unix() + '.jpg'
+  const token = store.getters.token
+  return (
+    token +
+    '/' +
+    prefix +
+    moment().format('YYYYMM') +
+    '/' +
+    moment().unix() +
+    '.jpg'
+  )
 }
