@@ -30,7 +30,7 @@
             <el-button v-if="scope.row.isDeleted === 5" size="mini" type="success" @click="handleOnline(scope.row)">上架</el-button>
             <el-button v-if="scope.row.isDeleted === 0" size="mini" type="success" @click="handleOffline(scope.row)">下架</el-button>
             <el-button v-if="scope.row.isDeleted === 3 || scope.row.isDeleted === 4 || scope.row.isDeleted === 5" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-            <el-button v-if="scope.row.isDeleted === 0" size="mini" type="primary" @click="handlePromotion(scope.row)">优惠</el-button>
+            <el-button v-if="scope.row.isDeleted === 0 && shopOnline" size="mini" type="primary" @click="handlePromotion(scope.row)">优惠</el-button>
           </el-button-group>
         </template>
       </el-table-column>
@@ -90,6 +90,11 @@ export default {
   directives: {
     waves
   },
+  computed: {
+    shopOnline() {
+      return this.$store.getters.shop.isDeleted === 0
+    }
+  },
   data() {
     return {
       list: [],
@@ -133,7 +138,7 @@ export default {
           }],
           disabledDate(today) {
             const now = new Date()
-            return now.getTime() >= today
+            return now.getTime() >= today || (now.getTime() + (3600 * 1000 * 24 * 7)) <= today
           }
         },
         form: {
@@ -291,6 +296,7 @@ export default {
             step: '00:30',
             end: '23:59'
           }
+          this.discount.form.commodityPrice = row.price
         }
         this.discount.dialogVisible = true
       })
