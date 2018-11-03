@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
+      <el-form-item label="商家负责人手机号码" required>
+        <el-input v-model="form.shopHeadTel"></el-input>
+      </el-form-item>
       <el-form-item label="商家logo" required>
         <upload-one :basePath="baseImagePath" :imageUrl="form.shopLogoUrl" @success="handleUploadSuccess"></upload-one>
       </el-form-item>
@@ -162,6 +165,7 @@ export default {
       addressSearchResult: [],
       form: {
         id: undefined,
+        shopHeadTel: '',
         shopName: '',
         shopAddress: '',
         shopLng: '',
