@@ -107,15 +107,15 @@ export default {
       console.log('上传before', file)
 
       const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt100K = file.size / 1024 / 1024 < 0.1
 
       if (!isJPG) {
         this.$message.error('上传图片只能是 JPG 格式!')
       }
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
+      if (!isLt100K) {
+        this.$message.error('上传图片大小不能超过 100k!')
       }
-      if (isJPG && isLt2M) {
+      if (isJPG && isLt100K) {
         return true
       }
 
