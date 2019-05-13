@@ -63,3 +63,11 @@ export function getCommodityRejectLog(params) {
     data: params
   })
 }
+
+export function queryCommodityAbstractWord(params) {
+  return request({
+    url: '/sp/commodity/abstractword/list',
+    method: 'post',
+    data: params
+  })
+}

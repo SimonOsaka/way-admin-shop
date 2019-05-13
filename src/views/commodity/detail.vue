@@ -1,22 +1,24 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10">
-      <el-col :span="24">
+    <el-row>
+      <el-col :span="6">
         <img :src="imgUrl + '?imageView2/0/w/178/h178'" v-for="imgUrl in form.imgUrlList" class="image">
       </el-col>
     </el-row>
-    <el-row :gutter="10">
-      <el-col :span="24">
-        <span>商品名称：</span><span>{{form.name}}</span>
-      </el-col>
+    <el-row>
+      <el-col :span="2">商品名称：</el-col>
+      <el-col :span="4">{{form.name}}</el-col>
     </el-row>
-    <el-row :gutter="10">
-      <el-col :span="24">
-        <span>商品价格：</span><span>{{form.price}}</span>
-      </el-col>
+    <el-row >
+      <el-col :span="2">商品价格：</el-col>
+      <el-col :span="4">{{form.price}}</el-col>
     </el-row>
-    <el-row :gutter="10">
-      <el-col :span="24">
+    <el-row>
+      <el-col :span="2">关联词：</el-col>
+      <el-col :span="4">{{form.abstractWordName}}</el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="6">
         <el-button @click="onCancel">返回</el-button>
       </el-col>
     </el-row>
@@ -33,6 +35,7 @@ export default {
         id: undefined,
         name: '',
         price: '',
+        abstractWordName: '',
         imgUrlList: [],
         shopId: undefined
       }
