@@ -10,6 +10,11 @@
       <el-form-item label="商品价格" required>
         <el-input v-model="form.price" placeholder="最低价格0.1元"></el-input>
       </el-form-item>
+      <el-form-item label="关联词" required>
+        <el-radio-group v-model="form.abstractWordId">
+          <el-radio :label="w.id" v-for="(w, i) in wordRadioList" :key="'word'+ i" border>{{w.name}}</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>
         <el-button type="primary" @click="onSubmit" :loading="saveBtn.loading" :disabled="saveBtn.disabled">{{$t('commodity.save')}}</el-button>
@@ -23,7 +28,7 @@
 </template>
 
 <script>
-import { getCommodity, createCommodity, updateCommodity } from '@/api/commodity'
+import { getCommodity, createCommodity, updateCommodity, queryCommodityAbstractWord } from '@/api/commodity'
 import uploadMultiple from '@/components/UploadImage/uploadMultiple'
 
 export default {
@@ -35,18 +40,30 @@ export default {
         name: '',
         price: '',
         imgUrlList: [],
-        shopId: undefined
+        shopId: undefined,
+        abstractWordId: ''
       },
       baseImagePath: 'commodity/images/',
       imgUrlArray: [],
       saveBtn: {
         disabled: false,
         loading: false
-      }
+      },
+      wordRadioList: []
     }
   },
   created() {
     console.log(this.$route.query.id)
+    queryCommodityAbstractWord({ shopCateLeafId: this.$store.getters.shop.shopCateLeafId, leaf: 1, num: 1, size: 100 }).then(response => {
+      const abstractWord = response.data.commodityAbstractWordBo
+      const wordList = abstractWord.commodityAbstractWordList
+      wordList.forEach(item => {
+        this.wordRadioList.push({
+          id: item.id,
+          name: item.name
+        })
+      })
+    })
     if (this.$route.query.id) {
       getCommodity({ id: this.$route.query.id }).then(response => {
         console.log(response)
