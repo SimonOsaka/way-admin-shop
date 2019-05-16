@@ -19,6 +19,7 @@
           @focus="handleCascaderBlur"
           :props="cateRootProps"
           :value="cateValue"
+          disabled="shopCateDisabled"
         ></el-cascader>
       </el-form-item>
       <el-form-item label="商家地址" required>
@@ -221,7 +222,8 @@ export default {
         license: 'shop/license/',
         images: 'shop/images/'
       },
-      otherQualifyImageUrlList: []
+      otherQualifyImageUrlList: [],
+      shopCateDisabled: false
     }
   },
   computed: {
@@ -295,6 +297,7 @@ export default {
           if (shopData.wayShopQualification['other5ImgUrl']) {
             this.otherQualifyImageUrlList.push({ url: shopData.wayShopQualification['other5ImgUrl'], name: 'other5' })
           }
+          this.shopCateDisabled = true
           this.getCateAll()
         })
       } else {
