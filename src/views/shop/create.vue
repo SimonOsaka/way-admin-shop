@@ -19,7 +19,7 @@
           @focus="handleCascaderBlur"
           :props="cateRootProps"
           :value="cateValue"
-          disabled="shopCateDisabled"
+          :disabled="shopCateDisabled"
         ></el-cascader>
       </el-form-item>
       <el-form-item label="商家地址" required>
