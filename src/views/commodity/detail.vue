@@ -15,7 +15,7 @@
     </el-row>
     <el-row>
       <el-col :span="2">关联词：</el-col>
-      <el-col :span="4">{{form.abstractWordName}}</el-col>
+      <el-col :span="4">{{form.abstractWordNames}}</el-col>
     </el-row>
     <el-row>
       <el-col :span="6">
@@ -35,7 +35,7 @@ export default {
         id: undefined,
         name: '',
         price: '',
-        abstractWordName: '',
+        abstractWordNames: '',
         imgUrlList: [],
         shopId: undefined
       }
