@@ -11,9 +11,9 @@
         <el-input v-model="form.price" placeholder="最低价格0.1元"></el-input>
       </el-form-item>
       <el-form-item label="关联词" required>
-        <el-radio-group v-model="form.abstractWordId">
-          <el-radio :label="w.id" v-for="(w, i) in wordRadioList" :key="'word'+ i" border>{{w.name}}</el-radio>
-        </el-radio-group>
+        <el-checkbox-group v-model="form.abstractWordIdList" :min="1" :max="5">
+          <el-checkbox :label="w.id" v-for="(w, i) in wordRadioList" :key="'word'+ i" border>{{w.name}}</el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>
@@ -41,7 +41,7 @@ export default {
         price: '',
         imgUrlList: [],
         shopId: undefined,
-        abstractWordId: ''
+        abstractWordIdList: []
       },
       baseImagePath: 'commodity/images/',
       imgUrlArray: [],
@@ -74,7 +74,6 @@ export default {
 
         this.form.id = this.$route.query.id
       })
-
       if (this.$store.getters.shop.isDeleted === 0) {
         this.saveBtn.disabled = true
       }
