@@ -54,13 +54,13 @@ export default {
   },
   created() {
     console.log(this.$route.query.id)
-    queryCommodityAbstractWord({ shopCateLeafId: this.$store.getters.shop.shopCateLeafId, leaf: 1, num: 1, size: 100 }).then(response => {
+    queryCommodityAbstractWord({ shopCateLeafId: this.$store.getters.shop.shopCateLeafId, leaf: 1 }).then(response => {
       const abstractWord = response.data.commodityAbstractWordBo
-      const wordList = abstractWord.commodityAbstractWordList
+      const wordList = abstractWord.commodityAbstractWordBoList
       wordList.forEach(item => {
         this.wordRadioList.push({
           id: item.id,
-          name: item.name
+          name: item.abstractWordPathName
         })
       })
     })
