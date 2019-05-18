@@ -153,6 +153,7 @@
 <script>
 import { getShop, createShop, updateShop, getShopCateAll } from '@/api/shop'
 import { searchMap } from '@/api/amap'
+import { getUserInfo } from '@/api/login'
 import uploadOne from '@/components/UploadImage/uploadOne'
 import uploadMultiple from '@/components/UploadImage/uploadMultiple'
 
@@ -301,6 +302,10 @@ export default {
           this.getCateAll()
         })
       } else {
+        getUserInfo(this.$store.getters.token, this.$store.getters.userLoginId).then(response => {
+          const profile = response.data.profile
+          this.form.shopHeadTel = profile.userTel
+        })
         this.getCateAll()
       }
     },
