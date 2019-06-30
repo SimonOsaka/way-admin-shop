@@ -9,7 +9,7 @@ const user = {
     code: '',
     token: getToken(),
     name: '',
-    avatar: 'http://static.duozouzou.top/shop.png',
+    avatar: 'http://static.jicu.vip/shop.png',
     introduction: '',
     roles: [],
     setting: {

@@ -6,8 +6,8 @@ const secretKey = 'vjhOhjk3Igl0KrH-1fiHFpTC9M5tWfbYzBR2N7NE'
 const bucket = process.env.NODE_ENV === 'production' ? 'static' : 'image02'
 const imageHost =
   process.env.NODE_ENV === 'production'
-    ? 'http://static.duozouzou.top/'
-    : 'http://image02.duozouzou.top/'
+    ? 'http://static.jicu.vip/'
+    : 'http://image02.jicu.vip/'
 const moment = require('moment')
 
 export function getImageFullUrl(key) {
