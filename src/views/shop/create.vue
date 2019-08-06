@@ -23,24 +23,28 @@
         ></el-cascader>
       </el-form-item>
       <el-form-item label="商家地址" required>
-        <el-input v-model="form.shopAddress" class="amap-address"></el-input><el-button type="primary" @click="handleSearchAddress">查询</el-button>
+        <el-input v-model="form.shopAddress" class="amap-address"></el-input>
+        <el-button type="primary" @click="handleSearchAddress">查询</el-button>
+        <el-button type="info" @click="resetAddress">重置</el-button>
         <div class="amap-section">
-          <div class="amap-map">
-            <el-amap ref="map" vid="amap-container" :zoom="amap.zoom" class="amap-container">
-              <el-amap-marker v-if="addressMarker.position.length !== 0" vid="component-marker" :position="addressMarker.position"></el-amap-marker>
-            </el-amap>
-          </div>
-          <div class="amap-address">
-            <el-table :data="addressSearchResult" highlight-current-row :border="true" @row-click="handleCurrentChange" height="300" style="width: 100%;" :header-row-class-name="handleHeaderRowStyle">
-              <el-table-column label="选择地址">
-                <template slot-scope="scope">
-                  <span class="font-weight-bold">{{scope.row['name']}}</span>
-                  <br>
-                  <span>{{scope.row['fullAddress']}}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
+          <el-row>
+            <el-col :span="18">
+              <el-amap ref="map" vid="amap-container" :zoom="amap.zoom" :events="events" class="amap-container">
+                <el-amap-marker v-if="addressMarker.position.length !== 0" :position="addressMarker.position" vid="component-marker"></el-amap-marker>
+              </el-amap>
+            </el-col>
+            <el-col :span="6">
+              <el-table :data="addressSearchResult" highlight-current-row :border="true" @row-click="handleCurrentChange" height="300" style="width: 100%;" :header-row-class-name="handleHeaderRowStyle">
+                <el-table-column label="选择地址">
+                  <template slot-scope="scope">
+                    <span class="font-weight-bold">{{scope.row['name']}}</span>
+                    <br>
+                    <span>{{scope.row['fullAddress']}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
         </div>
       </el-form-item>
       <el-form-item label="商家电话" required>
@@ -164,6 +168,14 @@ export default {
       addressMarker: {
         position: []
       },
+      events: {
+        click: (e) => {
+          const { lng, lat } = e.lnglat
+          this.addressMarker.position = [lng, lat]
+          this.form.shopLng = lng
+          this.form.shopLat = lat
+        }
+      },
       addressSearchResult: [],
       form: {
         id: undefined,
@@ -224,7 +236,14 @@ export default {
         images: 'shop/images/'
       },
       otherQualifyImageUrlList: [],
-      shopCateDisabled: false
+      shopCateDisabled: false,
+      temp: {
+        shopLng: '',
+        shopLat: '',
+        shopAddress: '',
+        cityCode: '',
+        adCode: ''
+      }
     }
   },
   computed: {
@@ -275,8 +294,14 @@ export default {
           if (this.form.isDeleted !== 3 && this.form.isDeleted !== 5) {
             this.saveBtn.disabled = true
           }
+          // temp 重置按钮
+          this.temp.shopLng = this.form.shopLng
+          this.temp.shopLat = this.form.shopLat
+          this.temp.shopAddress = this.form.shopAddress
+          this.temp.cityCode = this.form.cityCode
+          this.temp.adCode = this.form.adCode
           this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
-          this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
+          this.$refs.map.$$getInstance().setZoomAndCenter(this.amap.zoom, this.addressMarker.position)
           this.form.idcardFrontImgUrl = shopData.wayShopQualification.idcardFrontImgUrl
           this.form.idcardBackImgUrl = shopData.wayShopQualification.idcardBackImgUrl
           this.form.idcardHandImgUrl = shopData.wayShopQualification.idcardHandImgUrl
@@ -397,7 +422,7 @@ export default {
       this.form.shopLng = currentRow.location.split(',')[0]
       this.form.shopLat = currentRow.location.split(',')[1]
       this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
-      this.$refs.map.$$getInstance().setZoomAndCenter(this.zoom, this.addressMarker.position)
+      this.$refs.map.$$getInstance().setZoomAndCenter(this.amap.zoom, this.addressMarker.position)
     },
     handleSearchAddress() {
       searchMap(this.form.shopAddress).then(response => {
@@ -438,6 +463,19 @@ export default {
     },
     handleOtherLicenseUploadRemove(res) {
       this.otherQualifyImageUrlList = res.files
+    },
+    resetAddress() {
+      console.log(this.temp)
+      this.form.shopLng = this.temp.shopLng
+      this.form.shopLat = this.temp.shopLat
+      this.form.shopAddress = this.temp.shopAddress
+      this.form.cityCode = this.temp.cityCode
+      this.form.adCode = this.temp.adCode
+      this.addressSearchResult = []
+      if (this.form.shopLng && this.form.shopLat) {
+        this.addressMarker.position = [this.form.shopLng, this.form.shopLat]
+        this.$refs.map.$$getInstance().setZoomAndCenter(this.amap.zoom, this.addressMarker.position)
+      }
     }
   }
 }
