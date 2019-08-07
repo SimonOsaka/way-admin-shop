@@ -7,9 +7,11 @@
       <el-form-item label="商品名称" required>
         <el-input v-model="form.name"></el-input>
       </el-form-item>
+      <!--
       <el-form-item label="商品价格" required>
         <el-input v-model="form.price" placeholder="最低价格0.1元"></el-input>
       </el-form-item>
+      -->
       <el-form-item label="关联词" required>
         <el-checkbox-group v-model="form.abstractWordIdList" :min="1" :max="5">
           <el-checkbox :label="w.id" v-for="(w, i) in wordRadioList" :key="'word'+ i" border>{{w.name}}</el-checkbox>
@@ -38,7 +40,7 @@ export default {
       form: {
         id: undefined,
         name: '',
-        price: '',
+        // price: '',
         imgUrlList: [],
         shopId: undefined,
         abstractWordIdList: []
