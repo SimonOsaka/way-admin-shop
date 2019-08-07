@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="id" label="商品 ID"></el-table-column>
       <el-table-column prop="name" label="商品名称"></el-table-column>
-      <el-table-column prop="price" label="商品价格" width="100"></el-table-column>
+      <!-- <el-table-column prop="price" label="商品价格" width="100"></el-table-column> -->
       <el-table-column align="center" label="商品状态">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.statusName }}</el-tag>
@@ -43,7 +43,7 @@
     <el-dialog title="发布优惠" :visible.sync="discount.dialogVisible">
       <el-form ref="form" :model="discount.form" :disabled="discount.formDisabled">
         <el-form-item label="商品优惠价格">
-          <el-input v-model="discount.form.commodityPrice" placeholder="输入优惠价格，不能高于当前商品价格" style="width: 50%;"></el-input>
+          <el-input v-model="discount.form.commodityPrice" placeholder="输入优惠价格，单位：元" style="width: 50%;"></el-input>
         </el-form-item>
         <el-form-item label="商品优惠分类">
           <el-radio-group v-model="discount.form.commodityCate">

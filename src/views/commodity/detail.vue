@@ -9,10 +9,12 @@
       <el-col :span="2">商品名称：</el-col>
       <el-col :span="4">{{form.name}}</el-col>
     </el-row>
+    <!--
     <el-row >
       <el-col :span="2">商品价格：</el-col>
       <el-col :span="4">{{form.price}}</el-col>
     </el-row>
+    -->
     <el-row>
       <el-col :span="2">关联词：</el-col>
       <el-col :span="4">{{form.abstractWordNames}}</el-col>
@@ -34,7 +36,7 @@ export default {
       form: {
         id: undefined,
         name: '',
-        price: '',
+        // price: '',
         abstractWordNames: '',
         imgUrlList: [],
         shopId: undefined
