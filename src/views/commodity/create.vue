@@ -12,10 +12,11 @@
         <el-input v-model="form.price" placeholder="最低价格0.1元"></el-input>
       </el-form-item>
       -->
-      <el-form-item label="关联词" required>
+      <el-form-item label="抽象词" required>
         <el-checkbox-group v-model="form.abstractWordIdList" :min="1" :max="5">
           <el-checkbox :label="w.id" v-for="(w, i) in wordRadioList" :key="'word'+ i" border>{{w.name}}</el-checkbox>
         </el-checkbox-group>
+        <el-alert :closable="false" title="提示：抽象词最多选5个。每个抽象词只能对应一个商品。" type="info" show-icon/>
       </el-form-item>
       <el-form-item>
         <el-button @click="onCancel">取消</el-button>
