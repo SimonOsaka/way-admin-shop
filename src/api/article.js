@@ -45,3 +45,10 @@ export function queryCommodity(params) {
     data: params
   })
 }
+
+export function getRejectContent(postId) {
+  return request({
+    url: '/sp/article/audit/' + postId,
+    method: 'get'
+  })
+}

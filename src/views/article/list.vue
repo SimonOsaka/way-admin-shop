@@ -16,8 +16,9 @@
       <el-table-column class-name="status-col" label="状态" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.postStatus | statusFilter">
-            {{ row.postStatus | statusTextFilter }}
+            {{ row.postStatus | statusTextFilter }}{{ row.preAction | preActionFilter }}
           </el-tag>
+          <el-link v-if="row.postStatus === 3 && row.preAction === 3" @click="reason(row.postId)">查看<i class="el-icon-view el-icon--right"></i> </el-link>
         </template>
       </el-table-column>
 
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchList, getRejectContent } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -69,6 +70,12 @@ export default {
         3: '草稿'
       }
       return statusMap[status]
+    },
+    preActionFilter(preAction) {
+      const preActionMap = {
+        3: '（已驳回）'
+      }
+      return preActionMap[preAction]
     }
   },
   data() {
@@ -92,6 +99,13 @@ export default {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    reason(postId) {
+      getRejectContent(postId).then(response => {
+        this.$alert(response.data.rejectContent, '驳回原因', {
+          confirmButtonText: '知道了'
+        })
       })
     }
   }
