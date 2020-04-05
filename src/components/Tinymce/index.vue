@@ -118,6 +118,7 @@ export default {
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
         menubar: false,
         statusbar: false,
+        contextmenu: false,
         plugins: plugins,
         end_container_on_empty_block: true,
         powerpaste_word_import: 'clean',
