@@ -174,5 +174,45 @@ export const asyncRouterMap = [
     ]
   },
 
+  {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/list',
+    alwaysShow: true,
+    name: 'article',
+    meta: {
+      title: 'article',
+      icon: 'documentation'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/article/create'),
+        name: 'createArticle',
+        meta: { title: 'createArticle', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/article/edit'),
+        name: 'editArticle',
+        meta: { title: 'editArticle', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'detail/:id(\\d+)',
+        component: () => import('@/views/article/detail'),
+        name: 'detailArticle',
+        meta: { title: 'detailArticle', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/article/list'),
+        name: 'articleList',
+        meta: { title: 'articleList', icon: 'list' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]

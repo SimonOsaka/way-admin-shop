@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar wrapClass="scrollbar-wrapper">
+  <scroll-bar>
     <el-menu
       mode="vertical"
       :show-timeout="200"
@@ -9,17 +9,17 @@
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
-      <sidebar-item v-for="route in permission_routers" :key="route.name" :item="route" :base-path="route.path"></sidebar-item>
+      <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
-  </el-scrollbar>
+  </scroll-bar>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
-
+import ScrollBar from '@/components/ScrollBar'
 export default {
-  components: { SidebarItem },
+  components: { SidebarItem, ScrollBar },
   computed: {
     ...mapGetters([
       'permission_routers',
